@@ -60,11 +60,21 @@ rule PractitionerCanCreateMedicalRecordForPatient {
 
 rule PractitionerCanModifyPatientWhenCreatingMedicalRecords {
   description: "Allow practitioner update access to patient when creating medical record"
-	participant: "org.acme.sample.Practitioner"
-	operation: CREATE
+	participant(pt): "org.acme.sample.Practitioner"
+	operation: UPDATE
 	resource(p): "org.acme.sample.Patient"
   transaction(r): "org.acme.sample.CreateRecord"
-  condition:(r.owner.getIdentifier() === p.getIdentifier())
+  condition:(r.record.owner.getIdentifier() === p.getIdentifier() && r.record.author.getIdentifier() === pt.getIdentifier())
+	action: ALLOW
+}
+
+rule PractitionerCanModifyRecordsWhenCreatingMedicalRecords {
+  description: "Allow practitioner update access to record when creating medical record"
+	participant(pt): "org.acme.sample.Practitioner"
+	operation: UPDATE
+	resource(p): "org.acme.sample.MedicalRecord"
+  transaction(r): "org.acme.sample.CreateRecord"
+  condition:(r.record.author.getIdentifier() === pt.getIdentifier())
 	action: ALLOW
 }
 
