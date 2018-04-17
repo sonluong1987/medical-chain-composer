@@ -52,6 +52,23 @@ transaction RevokeAccess {
   --> Practitioner practitioner
 }
 
+transaction CreatePatient {
+  o String patientId
+  o String firstName
+  o String lastName
+  o String address
+  o String dob
+  o String height
+  o String weight
+}
+
+transaction CreatePractitioner {
+  o String practitionerId
+  o String firstName
+  o String lastName
+  o String address
+}
+
 transaction CreateRecord {
   o String recordId
   o String description
