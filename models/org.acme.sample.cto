@@ -3,7 +3,7 @@ namespace org.acme.sample
 asset MedicalRecord identified by recordId {
   o String recordId
   o String description
-  o String medicalNote
+  o String data
   o String date
   o String[] permissions
   --> Patient owner optional
@@ -53,14 +53,18 @@ transaction RevokeAccess {
 }
 
 transaction CreateRecord {
-  --> MedicalRecord record
+  o String recordId
+  o String description
+  o String data
+  o String date
+  --> Practitioner practitioner
   --> Patient patient
 }
 
-transaction UpdateRecord {
-  o String newNote
-  --> MedicalRecord record
-}
+// transaction UpdateRecord {
+//   o String newNote
+//   --> MedicalRecord record
+// }
 
 // transaction ReferPatient {
 //   --> MedicalRecord record

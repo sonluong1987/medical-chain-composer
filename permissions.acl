@@ -24,6 +24,14 @@ rule NetworkAdminUser {
     action: ALLOW
 }
 
+// rule PractitionerCanModifyPractitioner {
+// 	description: "Practitioner can access/modify practitioners profiles"
+// 	participant: "org.acme.sample.Practitioner"
+// 	operation: READ, UPDATE
+// 	resource: "org.acme.sample.Practitioner"
+// 	action: ALLOW
+// }
+
 rule PatientAccessPractitionerDetails {
 	description: "Patients can access practitioners profiles"
 	participant: "org.acme.sample.Patient"
@@ -54,7 +62,7 @@ rule PractitionerCanCreateMedicalRecordForPatient {
   description: "Allow practitioner create access to medical record"
 	participant: "org.acme.sample.Practitioner"
 	operation: CREATE
-	resource: "org.acme.sample.MedicalRecord"
+	resource: "org.acme.sample.CreateRecord"
 	action: ALLOW
 }
 
@@ -64,29 +72,28 @@ rule PractitionerCanModifyPatientWhenCreatingMedicalRecords {
 	operation: UPDATE
 	resource(p): "org.acme.sample.Patient"
   transaction(r): "org.acme.sample.CreateRecord"
-  condition:(r.record.owner.getIdentifier() === p.getIdentifier() && r.record.author.getIdentifier() === pt.getIdentifier())
+  condition:(p.authorized && p.authorized.indexOf(pt.getIdentifier()) > -1 && r.patient.getIdentifier() === p.getIdentifier())
 	action: ALLOW
 }
 
-rule PractitionerCanModifyRecordsWhenCreatingMedicalRecords {
+rule PractitionerCanCreateRecordWhenCreatingMedicalRecords {
   description: "Allow practitioner update access to record when creating medical record"
-	participant(pt): "org.acme.sample.Practitioner"
-	operation: UPDATE
-	resource(p): "org.acme.sample.MedicalRecord"
-  transaction(r): "org.acme.sample.CreateRecord"
-  condition:(r.record.author.getIdentifier() === pt.getIdentifier())
+	participant: "org.acme.sample.Practitioner"
+	operation: CREATE
+	resource: "org.acme.sample.MedicalRecord"
+  transaction: "org.acme.sample.CreateRecord"
 	action: ALLOW
 }
 
-rule PractitionerCanUpdatePatientViaTx {
-	description: "Allow practitioner update access to all granted patients"
-	participant(p): "org.acme.sample.Practitioner"
-	operation: UPDATE
-	resource(r): "org.acme.sample.Patient"
-	transaction(tx): "org.acme.sample.UpdateRecord"
-	condition: (r.authorized && r.authorized.indexOf(p.getIdentifier()) > -1)
-	action: ALLOW
-}
+// rule PractitionerCanUpdatePatientViaTx {
+// 	description: "Allow practitioner update access to all granted patients"
+// 	participant(p): "org.acme.sample.Practitioner"
+// 	operation: UPDATE
+// 	resource(r): "org.acme.sample.Patient"
+// 	transaction(tx): "org.acme.sample.UpdateRecord"
+// 	condition: (r.authorized && r.authorized.indexOf(p.getIdentifier()) > -1)
+// 	action: ALLOW
+// }
 
 rule PatientHasFullAccessToTheirRecords {
     description: "Allow all participants full access to their assets"
