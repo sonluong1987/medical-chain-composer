@@ -1,0 +1,25 @@
+{
+  "name": "medical-chain",
+  "version": "0.0.6",
+  "description": "implementation of a medical record management system on block chain",
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "author": "Son",
+  "email": "sluong@unb.ca",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "chai": "latest",
+    "composer-admin": "^0.19.0",
+    "composer-client": "^0.19.0",
+    "composer-common": "^0.19.0",
+    "composer-connector-embedded": "^0.19.0",
+    "eslint": "latest",
+    "istanbul": "latest",
+    "mkdirp": "latest",
+    "mocha": "latest"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

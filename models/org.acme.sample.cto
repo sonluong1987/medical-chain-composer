@@ -1,0 +1,84 @@
+namespace org.acme.sample
+
+asset MedicalRecord identified by recordId {
+  o String recordId
+  o String description
+  o String medicalNote
+  o String date
+  o String[] permissions
+  --> Patient owner optional
+  --> Practitioner author
+}
+
+asset PractitionerDetails identified by practitionerDetailsId {
+  o String practitionerDetailsId
+  o String firstName
+  o String lastName
+  o String address
+  --> Practitioner owner optional
+}
+
+asset PatientDetails identified by patientDetailsId {
+  o String patientDetailsId
+  o String firstName
+  o String lastName
+  o String address
+  o String dob
+  o String height
+  o String weight
+  --> Patient owner optional
+}
+
+participant Practitioner identified by practitionerId {
+  o String practitionerId
+  o String[] patients optional
+  --> PractitionerDetails profile
+}
+
+participant Patient identified by patientId {
+  o String patientId
+  o String[] medicalRecords optional
+  o String[] authorized optional
+  --> PatientDetails personalDetails
+}
+
+transaction GrantAccess {
+  --> MedicalRecord record
+  --> Practitioner practitioner
+}
+
+transaction RevokeAccess {
+  --> MedicalRecord record
+  --> Practitioner practitioner
+}
+
+transaction CreateRecord {
+  --> MedicalRecord record
+  --> Patient patient
+}
+
+transaction UpdateRecord {
+  o String newNote
+  --> MedicalRecord record
+}
+
+// transaction ReferPatient {
+//   --> MedicalRecord record
+//   --> Practitioner newPractitioner
+// }
+
+// event UpdateEvent {
+//   o String oldNote
+//   o String newNote
+//   --> MedicalRecord record
+// }
+
+// event GrantAccessEvent {
+//   --> MedicalRecord record
+//   --> Practitioner practitioner
+// }
+
+// event RevokeAccessEvent {
+//   --> MedicalRecord record
+//   --> Practitioner practitioner
+// }
