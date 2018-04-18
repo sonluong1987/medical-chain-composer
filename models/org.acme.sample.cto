@@ -37,8 +37,8 @@ participant Practitioner identified by practitionerId {
 
 participant Patient identified by patientId {
   o String patientId
-  o String[] medicalRecords optional
-  o String[] authorized optional
+  o String[] authorized
+  --> MedicalRecord[] medicalRecords optional
   --> PatientDetails personalDetails
 }
 
