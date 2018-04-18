@@ -42,16 +42,6 @@ participant Patient identified by patientId {
   --> PatientDetails personalDetails
 }
 
-transaction GrantAccess {
-  --> MedicalRecord record
-  --> Practitioner practitioner
-}
-
-transaction RevokeAccess {
-  --> MedicalRecord record
-  --> Practitioner practitioner
-}
-
 transaction CreatePatient {
   o String patientId
   o String firstName
@@ -76,6 +66,27 @@ transaction CreateRecord {
   o String date
   --> Practitioner practitioner
   --> Patient patient
+}
+
+
+transaction GrantAccessToReadPatient {
+  --> Patient patient
+  --> Practitioner practitioner
+}
+
+transaction GrantAccessToReadRecord {
+  --> MedicalRecord record
+  --> Practitioner practitioner
+}
+
+transaction RevokeAccessToPatient {
+  --> Patient patient
+  --> Practitioner practitioner
+}
+
+transaction RevokeAccessToRecord {
+  --> MedicalRecord record
+  --> Practitioner practitioner
 }
 
 // transaction UpdateRecord {

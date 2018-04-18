@@ -32,6 +32,14 @@ rule NetworkAdminUser {
 // 	action: ALLOW
 // }
 
+rule PatientAccessPractitioner {
+	description: "Patients can access practitioners"
+	participant: "org.acme.sample.Patient"
+	operation: READ
+	resource: "org.acme.sample.Practitioner"
+	action: ALLOW
+}
+
 rule PatientAccessPractitionerDetails {
 	description: "Patients can access practitioners profiles"
 	participant: "org.acme.sample.Patient"
@@ -82,6 +90,30 @@ rule PractitionerCanCreateRecordWhenCreatingMedicalRecords {
 	operation: CREATE
 	resource: "org.acme.sample.MedicalRecord"
   transaction: "org.acme.sample.CreateRecord"
+	action: ALLOW
+}
+
+rule PatientCanModifyOwnProfile {
+  description: "Allow patients to modify their own profiles"
+	participant: "org.acme.sample.Patient"
+	operation: UPDATE
+	resource: "org.acme.sample.Patient"
+	action: ALLOW
+}
+
+rule PatientCanGrantPractitionerAccessToTheirProfile {
+  description: "Allow patients to grant practitioner access to their own profile"
+	participant: "org.acme.sample.Patient"
+	operation: CREATE
+	resource: "org.acme.sample.GrantAccessToReadPatient"
+	action: ALLOW
+}
+
+rule PatientCanGrantPractitionerAccessToTheirRecord {
+  description: "Allow patients to grant practitioner access to their own records"
+	participant: "org.acme.sample.Patient"
+	operation: CREATE
+	resource: "org.acme.sample.GrantAccessToReadRecord"
 	action: ALLOW
 }
 
