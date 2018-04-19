@@ -105,7 +105,7 @@ rule PatientCanGrantPractitionerAccessToTheirProfile {
   description: "Allow patients to grant practitioner access to their own profile"
 	participant: "org.acme.sample.Patient"
 	operation: CREATE
-	resource: "org.acme.sample.GrantAccessToReadPatient"
+	resource: "org.acme.sample.GrantAccessToPatient"
 	action: ALLOW
 }
 
@@ -113,7 +113,7 @@ rule PatientCanGrantPractitionerAccessToTheirRecord {
   description: "Allow patients to grant practitioner access to their own records"
 	participant: "org.acme.sample.Patient"
 	operation: CREATE
-	resource: "org.acme.sample.GrantAccessToReadRecord"
+	resource: "org.acme.sample.GrantAccessToRecord"
 	action: ALLOW
 }
 

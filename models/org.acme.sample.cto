@@ -69,12 +69,12 @@ transaction CreateRecord {
 }
 
 
-transaction GrantAccessToReadPatient {
+transaction GrantAccessToPatient {
   --> Patient patient
   --> Practitioner practitioner
 }
 
-transaction GrantAccessToReadRecord {
+transaction GrantAccessToRecord {
   --> MedicalRecord record
   --> Practitioner practitioner
 }
