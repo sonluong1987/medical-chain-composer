@@ -1,6 +1,6 @@
 {
   "name": "medical-chain",
-  "version": "0.0.19",
+  "version": "0.0.33",
   "description": "implementation of a medical record management system on block chain",
   "scripts": {
     "test": "mocha --recursive"

@@ -48,12 +48,37 @@ rule PatientAccessPractitionerDetails {
 	action: ALLOW
 }
 
+rule PractitionerCanAccessPractitioner {
+  description: "Practitioner can access practitioners"
+	participant: "org.acme.sample.Practitioner"
+	operation: READ
+	resource: "org.acme.sample.Practitioner"
+	action: ALLOW
+}
+
+rule PractitionerCanAccessPractitionerDetails {
+  description: "Practitioner can access practitioners profiles"
+	participant: "org.acme.sample.Practitioner"
+	operation: READ
+	resource: "org.acme.sample.PractitionerDetails"
+	action: ALLOW
+}
+
 rule PractitionerCanReadPatientIfAuthorized {
 	description: "Allow practitioner read access to all granted patients"
 	participant(p): "org.acme.sample.Practitioner"
 	operation: READ
 	resource(r): "org.acme.sample.Patient"
 	condition: (r.authorized && r.authorized.indexOf(p.getIdentifier()) > -1)
+	action: ALLOW
+}
+
+rule PractitionerCanReadPatientDetailsIfAuthorized {
+	description: "Allow practitioner read access to all granted patients"
+	participant(p): "org.acme.sample.Practitioner"
+	operation: READ
+	resource(r): "org.acme.sample.PatientDetails"
+	condition: (r.owner.authorized.indexOf(p.getIdentifier()) > -1)
 	action: ALLOW
 }
 
@@ -79,13 +104,13 @@ rule PractitionerCanModifyPatientWhenCreatingMedicalRecords {
 	participant(pt): "org.acme.sample.Practitioner"
 	operation: UPDATE
 	resource(p): "org.acme.sample.Patient"
-  transaction(r): "org.acme.sample.CreateRecord"
-  condition:(p.authorized && p.authorized.indexOf(pt.getIdentifier()) > -1 && r.patient.getIdentifier() === p.getIdentifier())
+  transaction: "org.acme.sample.CreateRecord"
+  condition:(p.authorized && p.authorized.indexOf(pt.getIdentifier()) > -1)
 	action: ALLOW
 }
 
 rule PractitionerCanCreateRecordWhenCreatingMedicalRecords {
-  description: "Allow practitioner update access to record when creating medical record"
+  description: "Allow practitioner to create medical records"
 	participant: "org.acme.sample.Practitioner"
 	operation: CREATE
 	resource: "org.acme.sample.MedicalRecord"
@@ -93,12 +118,32 @@ rule PractitionerCanCreateRecordWhenCreatingMedicalRecords {
 	action: ALLOW
 }
 
+rule PractitionerCanCreateMedicalRecordData {
+  description: "Allow practitioner to create medical record data when creating medical record"
+	participant: "org.acme.sample.Practitioner"
+	operation: CREATE
+	resource: "org.acme.sample.MedicalRecordData"
+  transaction: "org.acme.sample.CreateRecord"
+	action: ALLOW
+}
+
+
+rule PatientCanReadAndUpdateTheirProfile {
+  description: "Patients can read and update their own profile"
+	participant(p): "org.acme.sample.Patient"
+	operation: READ, UPDATE
+	resource(r): "org.acme.sample.Patient"
+  condition: (p.getIdentifier() == r.getIdentifier())
+	action: ALLOW
+}
+
 rule PatientCanModifyOwnProfile {
   description: "Allow patients to modify their own profiles"
-	participant: "org.acme.sample.Patient"
-	operation: UPDATE
-	resource: "org.acme.sample.Patient"
-	action: ALLOW
+	participant(p): "org.acme.sample.Patient"
+	operation: ALL
+	resource(r): "org.acme.sample.PatientDetails"
+	condition: (p.getIdentifier() == r.getIdentifier())
+  action: ALLOW
 }
 
 rule PatientCanGrantPractitionerAccessToTheirProfile {
@@ -117,15 +162,21 @@ rule PatientCanGrantPractitionerAccessToTheirRecord {
 	action: ALLOW
 }
 
-// rule PractitionerCanUpdatePatientViaTx {
-// 	description: "Allow practitioner update access to all granted patients"
-// 	participant(p): "org.acme.sample.Practitioner"
-// 	operation: UPDATE
-// 	resource(r): "org.acme.sample.Patient"
-// 	transaction(tx): "org.acme.sample.UpdateRecord"
-// 	condition: (r.authorized && r.authorized.indexOf(p.getIdentifier()) > -1)
-// 	action: ALLOW
-// }
+rule PatientCanRevokePractitionerAccessToTheirProfile {
+  description: "Allow patients to revoke practitioner access to their own profile"
+	participant: "org.acme.sample.Patient"
+	operation: CREATE
+	resource: "org.acme.sample.RevokeAccessToPatient"
+	action: ALLOW
+}
+
+rule PatientCanRevokePractitionerAccessToTheirRecord {
+  description: "Allow patients to revoke practitioner access to their own records"
+	participant: "org.acme.sample.Patient"
+	operation: CREATE
+	resource: "org.acme.sample.RevokeAccessToRecord"
+	action: ALLOW
+}
 
 rule PatientHasFullAccessToTheirRecords {
     description: "Allow all participants full access to their assets"
@@ -134,6 +185,22 @@ rule PatientHasFullAccessToTheirRecords {
     resource(r): "org.acme.sample.MedicalRecord"
     condition: (r.owner.getIdentifier() === p.getIdentifier())
     action: ALLOW
+}
+
+rule PatientCanAccessRecordData {
+  description: "Patients can access record data"
+	participant: "org.acme.sample.Patient"
+	operation: READ
+	resource: "org.acme.sample.MedicalRecordData"
+	action: ALLOW
+}
+
+rule PractitionerCanAccessRecordData {
+  description: "Practitioners can access record data"
+	participant: "org.acme.sample.Practitioner"
+	operation: READ
+	resource: "org.acme.sample.MedicalRecordData"
+	action: ALLOW
 }
 
 rule SystemACL {
